@@ -1,8 +1,9 @@
 package com.lms.authservice.controller;
 
-import com.lms.authservice.dto.AuthResponseDTO;
 import com.lms.authservice.dto.LoginRequestDTO;
+import com.lms.authservice.dto.LoginResponseDTO;
 import com.lms.authservice.dto.RegisterRequestDTO;
+import com.lms.authservice.dto.UserProfileDTO;
 import com.lms.authservice.entity.User;
 import com.lms.authservice.service.AuthService;
 import com.lms.authservice.util.JwtTokenProvider;
@@ -21,68 +22,36 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
         log.info("Register request for user: {}", request.getUsername());
-        AuthResponseDTO response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         log.info("Login request for user: {}", request.getUsername());
-        AuthResponseDTO response = authService.login(request);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        boolean isValid = authService.validateToken(token);
-        return ResponseEntity.ok(isValid);
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<AuthResponseDTO> getUserProfile(@PathVariable Long id) {
-        Optional<User> user = authService.getUserById(id);
-        if (user.isPresent()) {
-            AuthResponseDTO response = AuthResponseDTO.builder()
-                    .userId(user.get().getId())
-                    .username(user.get().getUsername())
-                    .email(user.get().getEmail())
-                    .fullName(user.get().getFullName())
-                    .role(user.get().getRole())
-                    .isActive(user.get().getIsActive())
-                    .message("User profile retrieved")
-                    .build();
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<UserProfileDTO> getUserProfile(@PathVariable Long id) {
+        return ResponseEntity.ok(authService.getUserProfile(id));
     }
 
     @PutMapping("/profile/{id}")
-    public ResponseEntity<AuthResponseDTO> updateUserProfile(
+    public ResponseEntity<UserProfileDTO> updateUserProfile(
             @PathVariable Long id,
             @Valid @RequestBody RegisterRequestDTO request) {
-        User updatedUser = authService.updateUser(id, request);
-        AuthResponseDTO response = AuthResponseDTO.builder()
-                .userId(updatedUser.getId())
-                .username(updatedUser.getUsername())
-                .email(updatedUser.getEmail())
-                .fullName(updatedUser.getFullName())
-                .role(updatedUser.getRole())
-                .isActive(updatedUser.getIsActive())
-                .message("User profile updated successfully")
-                .build();
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(authService.updateUser(id, request));
     }
 
     @GetMapping("/health")

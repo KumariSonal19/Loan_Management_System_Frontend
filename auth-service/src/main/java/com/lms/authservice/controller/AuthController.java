@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,10 +31,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequestDTO request) {
         log.info("Register request for user: {}", request.getUsername());
+        
+        authService.register(request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(authService.register(request));
+                .body("User registered successfully");
     }
 
     @PostMapping("/login")

@@ -38,7 +38,7 @@ public class LoanTypeDTO {
     private Integer minTenure;
 
     @NotNull(message = "Maximum tenure is required")
-    @Max(value = 480, message = "Maximum tenure cannot exceed 480 months (40 years)")
+    @Max(value = 240, message = "Maximum tenure cannot exceed 240 months (20 years)")
     private Integer maxTenure;
 
     @Size(max = 1000, message = "Description cannot exceed 1000 characters")

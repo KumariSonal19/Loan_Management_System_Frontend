@@ -12,7 +12,8 @@ import lombok.Builder;
 public class NotificationDTO {
     private Long userId;
     private Long loanId;   
-    private String type;     
+    private String type;   
+    private String userEmail;
     private String title;   
     private String message;
 }

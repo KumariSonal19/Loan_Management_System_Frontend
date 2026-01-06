@@ -1,0 +1,146 @@
+<div class="auth-container">
+  <div class="auth-card">
+ 
+    <div class="auth-header">
+      <h1>Create Account</h1>
+      <p>Register to access the Loan Management System</p>
+    </div>
+
+    <form
+      class="auth-form"
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-control"
+          placeholder="Enter username"
+          [class.error]="hasError('username', 'required') || hasError('username', 'minlength')"
+        />
+        <span class="error-message" *ngIf="hasError('username', 'required')">
+          Username is required
+        </span>
+        <span class="error-message" *ngIf="hasError('username', 'minlength')">
+          Username must be at least 3 characters
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="Enter email"
+          [class.error]="hasError('email', 'required') || hasError('email', 'email')"
+        />
+        <span class="error-message" *ngIf="hasError('email', 'required')">
+          Email is required
+        </span>
+        <span class="error-message" *ngIf="hasError('email', 'email')">
+          Enter a valid email address
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input
+            id="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            class="form-control"
+            placeholder="Enter password"
+            [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="hidePassword = !hidePassword"
+            aria-label="Toggle password visibility"
+          >
+            {{ hidePassword ? '' : '' }}
+          </button>
+        </div>
+
+        <span class="error-message" *ngIf="getPasswordErrors()">
+          {{ getPasswordErrors() }}
+        </span>
+
+        <span class="password-hint">
+          Password must contain at least 8 characters, one uppercase letter,
+          one lowercase letter, one number, and one special character.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input
+          id="fullName"
+          type="text"
+          formControlName="fullName"
+          class="form-control"
+          placeholder="Enter full name"
+          [class.error]="hasError('fullName', 'required')"
+        />
+        <span class="error-message" *ngIf="hasError('fullName', 'required')">
+          Full name is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input
+          id="phoneNumber"
+          type="text"
+          formControlName="phoneNumber"
+          class="form-control"
+          placeholder="10-digit phone number"
+          maxlength="10"
+          [class.error]="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')"
+        />
+        <span class="error-message" *ngIf="hasError('phoneNumber', 'required')">
+          Phone number is required
+        </span>
+        <span class="error-message" *ngIf="hasError('phoneNumber', 'pattern')">
+          Enter a valid 10-digit phone number
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select
+          id="role"
+          formControlName="role"
+          class="form-control"
+        >
+          <option value="CUSTOMER">Customer</option>
+          <option value="LOAN_OFFICER">Loan Officer</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'Registering...' : 'Register' }}
+      </button>
+    </form>
+
+    
+    <div class="auth-footer">
+      <p>
+        Already have an account?
+        <a routerLink="/auth/login">Login</a>
+      </p>
+    </div>
+  </div>
+</div>

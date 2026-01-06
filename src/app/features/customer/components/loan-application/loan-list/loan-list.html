@@ -1,0 +1,82 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>My Loan Applications</h1>
+    <p>View all your loan applications</p>
+  </div>
+
+  <div class="filters-section">
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'ALL'"
+      (click)="onFilterChange('ALL')"
+    >
+      All ({{ loans.length }})
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'APPLIED'"
+      (click)="onFilterChange('APPLIED')"
+    >
+      Applied
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'UNDER_REVIEW'"
+      (click)="onFilterChange('UNDER_REVIEW')"
+    >
+      Under Review
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'APPROVED'"
+      (click)="onFilterChange('APPROVED')"
+    >
+      Approved
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'REJECTED'"
+      (click)="onFilterChange('REJECTED')"
+    >
+      Rejected
+    </button>
+  </div>
+
+  <app-loader *ngIf="isLoading" message="Loading your loans..."></app-loader>
+
+  <div class="loans-grid" *ngIf="!isLoading && filteredLoans.length > 0">
+    <div class="loan-card" *ngFor="let loan of filteredLoans">
+      <div class="loan-card-header">
+        <h3>Loan #{{ loan.id }}</h3>
+        <span class="badge" [ngClass]="getStatusClass(loan.status!)">
+          {{ loan.status }}
+        </span>
+      </div>
+
+      <div class="loan-card-body">
+        <div class="loan-info">
+          <span class="label">Amount:</span>
+          <span class="value">{{ loan.loanAmount | currencyFormat }}</span>
+        </div>
+        <div class="loan-info">
+          <span class="label">Tenure:</span>
+          <span class="value">{{ loan.tenure }} months</span>
+        </div>
+        <div class="loan-info">
+          <span class="label">Applied:</span>
+          <span class="value">{{ loan.appliedDate || '' | dateFormat }}</span>
+        </div>
+      </div>
+
+      <div class="loan-card-footer">
+        <button class="btn btn-sm btn-primary" (click)="viewDetails(loan.id!)">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-data" *ngIf="!isLoading && filteredLoans.length === 0">
+    <p>No loans found for the selected filter</p>
+  </div>
+</div>

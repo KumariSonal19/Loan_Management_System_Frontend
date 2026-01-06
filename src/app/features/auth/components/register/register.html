@@ -113,26 +113,13 @@
         </span>
       </div>
 
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select
-          id="role"
-          formControlName="role"
-          class="form-control"
-        >
-          <option value="CUSTOMER">Customer</option>
-          <option value="LOAN_OFFICER">Loan Officer</option>
-          <option value="ADMIN">Admin</option>
-        </select>
-      </div>
-
       <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="isLoading"
-      >
-        {{ isLoading ? 'Registering...' : 'Register' }}
-      </button>
+      type="submit"
+      class="btn btn-primary btn-block"
+      [disabled]="registerForm.invalid || isLoading"
+    >
+      {{ isLoading ? 'Registering...' : 'Register' }}
+    </button>
     </form>
 
     

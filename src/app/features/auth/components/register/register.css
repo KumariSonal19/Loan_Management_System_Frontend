@@ -1,0 +1,24 @@
+@import '../login/login.css';
+
+.auth-card {
+  max-width: 500px;
+}
+
+.password-hint {
+  display: block;
+  color: #718096;
+  font-size: 12px;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+select.form-control {
+  cursor: pointer;
+  background-color: white;
+  
+  &:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+}

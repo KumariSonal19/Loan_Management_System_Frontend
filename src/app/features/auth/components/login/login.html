@@ -1,0 +1,61 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Loan Management System</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form *ngIf="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username"
+          formControlName="username"
+          class="form-control"
+          [class.error]="hasError('username', 'required')"
+          placeholder="Enter your username"
+        />
+        <span class="error-message" *ngIf="hasError('username', 'required')">
+          Username is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input 
+            [type]="hidePassword ? 'password' : 'text'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [class.error]="hasError('password', 'required')"
+            placeholder="Enter your password"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="hidePassword = !hidePassword"
+            tabindex="-1">
+          </button>
+        </div>
+        <span class="error-message" *ngIf="hasError('password', 'required')">
+          Password is required
+        </span>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-block"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing in...</span>
+      </button>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+      </div>
+    </form>
+  </div>
+</div>

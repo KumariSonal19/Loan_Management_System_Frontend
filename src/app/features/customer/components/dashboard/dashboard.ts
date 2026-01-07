@@ -14,7 +14,7 @@ import { LoanApplication, LoanStatus } from '../../../../shared/models';
     RouterModule
   ],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss']
+  styleUrls: ['./dashboard.css']
 })
 export class CustomerDashboardComponent implements OnInit {
   isLoading = true;

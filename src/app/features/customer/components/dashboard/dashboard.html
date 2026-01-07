@@ -1,0 +1,166 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h1>My Loan Dashboard</h1>
+      <p>Track your loan applications and manage payments</p>
+    </div>
+    <button class="btn btn-primary" (click)="applyForLoan()">
+      <i class="fas fa-plus-circle"></i>
+      Apply for Loan
+    </button>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div class="stats-grid">
+
+      <div class="stat-card primary">
+        <div class="stat-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.totalLoans }}</h3>
+          <p>Total Applications</p>
+        </div>
+      </div>
+
+      <div class="stat-card warning">
+        <div class="stat-icon">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.appliedLoans }}</h3>
+          <p>Pending</p>
+        </div>
+      </div>
+
+      <div class="stat-card success">
+        <div class="stat-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.approvedLoans }}</h3>
+          <p>Approved</p>
+        </div>
+      </div>
+
+      <div class="stat-card danger">
+        <div class="stat-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.rejectedLoans }}</h3>
+          <p>Rejected</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="loans-section">
+      <h2>My Loan Applications</h2>
+
+      <div class="no-data" *ngIf="loans.length === 0">
+        <p>You haven't applied for any loans yet</p>
+        <button class="btn btn-primary" (click)="applyForLoan()">
+          <i class="fas fa-file-signature"></i>
+          Apply for Your First Loan
+        </button>
+      </div>
+
+      <div class="loans-grid" *ngIf="loans.length > 0">
+        <div class="loan-card" *ngFor="let loan of loans">
+
+          <div class="loan-card-header">
+            <h3>
+              <i class="fas fa-file-invoice-dollar"></i>
+              Loan #{{ loan.id }}
+            </h3>
+            <span class="badge" [ngClass]="getStatusClass(loan.status!)">
+              {{ getStatusLabel(loan.status!) }}
+            </span>
+          </div>
+
+          <div class="loan-card-body">
+
+            <div class="loan-detail">
+              <span class="label">
+                <i class="fas fa-rupee-sign"></i>
+                Requested Amount:
+              </span>
+              <span class="value">
+                ₹{{ loan.loanAmount | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <div class="loan-detail" *ngIf="loan.approvedAmount">
+              <span class="label">
+                <i class="fas fa-wallet"></i>
+                Approved Amount:
+              </span>
+              <span class="value success">
+                ₹{{ loan.approvedAmount | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <div class="loan-detail">
+              <span class="label">
+                <i class="fas fa-calendar-alt"></i>
+                Tenure:
+              </span>
+              <span class="value">{{ loan.tenure }} months</span>
+            </div>
+
+            <div class="loan-detail" *ngIf="loan.approvedInterestRate">
+              <span class="label">
+                <i class="fas fa-percent"></i>
+                Interest Rate:
+              </span>
+              <span class="value">{{ loan.approvedInterestRate }}%</span>
+            </div>
+
+            <div class="loan-detail">
+              <span class="label">
+                <i class="fas fa-clock"></i>
+                Applied Date:
+              </span>
+              <span class="value">
+                {{ loan.appliedDate | date:'mediumDate' }}
+              </span>
+            </div>
+
+            <div class="loan-detail" *ngIf="loan.approvalRemarks">
+              <span class="label">
+                <i class="fas fa-comment-alt"></i>
+                Remarks:
+              </span>
+              <span class="value remarks">
+                {{ loan.approvalRemarks }}
+              </span>
+            </div>
+
+          </div>
+
+          <div class="loan-card-actions">
+            <button class="btn btn-sm btn-outline" (click)="viewLoanDetails(loan.id!)">
+              <i class="fas fa-eye"></i>
+              View Details
+            </button>
+
+            <button
+              class="btn btn-sm btn-primary"
+              (click)="viewEMISchedule(loan.id!)"
+              *ngIf="loan.status === 'APPROVED'"
+            >
+              <i class="fas fa-table"></i>
+              EMI Schedule
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

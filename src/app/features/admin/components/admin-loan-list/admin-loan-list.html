@@ -1,0 +1,63 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>All Loan Applications</h1>
+    <p>View and manage all customer loans</p>
+  </div>
+
+  <div class="filters-section">
+    <input 
+      type="text" 
+      placeholder="Search by Loan ID..." 
+      [(ngModel)]="searchTerm" 
+      (ngModelChange)="applyFilters()"
+      class="form-control"
+    >
+    <select [(ngModel)]="filterStatus" (change)="applyFilters()" class="form-control">
+      <option value="ALL">All Statuses</option>
+      <option value="APPLIED">Applied</option>
+      <option value="UNDER_REVIEW">Under Review</option>
+      <option value="APPROVED">Approved</option>
+      <option value="REJECTED">Rejected</option>
+      <option value="CLOSED">Closed</option>
+    </select>
+  </div>
+
+  @if (isLoading) {
+    <app-loader message="Loading loans..."></app-loader>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Loan ID</th>
+            <th>Type ID</th>
+            <th>Amount</th>
+            <th>Tenure</th>
+            <th>Status</th>
+            <th>Applied Date</th>
+            </tr>
+        </thead>
+        <tbody>
+          @for (loan of filteredLoans; track loan.id) {
+            <tr>
+              <td>#{{ loan.id }}</td>
+              <td>{{ loan.loanTypeId }}</td>
+              <td>{{ loan.loanAmount | currency:'INR' }}</td>
+              <td>{{ loan.tenure }} Months</td>
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(loan.status)">
+                  {{ loan.status }}
+                </span>
+              </td>
+              <td>{{ loan.appliedDate | date:'mediumDate' }}</td>
+              </tr>
+          }
+        </tbody>
+      </table>
+      
+      @if (filteredLoans.length === 0) {
+        <div class="no-data">No loans found.</div>
+      }
+    </div>
+  }
+</div>

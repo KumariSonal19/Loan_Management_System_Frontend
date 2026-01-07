@@ -1,0 +1,98 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Loan Types</h1>
+      <p>Manage all loan type configurations</p>
+    </div>
+    <button class="btn btn-primary" (click)="createLoanType()">
+      ➕ Create Loan Type
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by name or description..."
+        class="form-control"
+      />
+    </div>
+    <div class="filter-checkbox">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="showInactive"
+          (ngModelChange)="onShowInactiveChange()"
+        />
+        Show Inactive
+      </label>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading">
+    <table class="data-table" *ngIf="filteredLoanTypes.length > 0">
+      <thead>
+        <tr>
+          <th>Type Name</th>
+          <th>Amount Range</th>
+          <th>Interest Rate</th>
+          <th>Tenure Range</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loanType of filteredLoanTypes">
+          <td>
+            <strong>{{ loanType.typeName }}</strong>
+            <small *ngIf="loanType.description">{{ loanType.description }}</small>
+          </td>
+          <td>
+            ₹{{ loanType.minAmount | number:'1.0-0' }} - 
+            ₹{{ loanType.maxAmount | number:'1.0-0' }}
+          </td>
+          <td>{{ loanType.baseInterestRate }}%</td>
+          <td>{{ loanType.minTenure }} - {{ loanType.maxTenure }} months</td>
+          <td>
+            <span class="badge" [class.active]="loanType.isActive" [class.inactive]="!loanType.isActive">
+              {{ loanType.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" (click)="viewLoanType(loanType.id!)" title="View">
+                👁️
+              </button>
+              <button class="btn-icon" (click)="editLoanType(loanType.id!)" title="Edit">
+                ✏️
+              </button>
+              <button 
+                class="btn-icon" 
+                (click)="toggleStatus(loanType)" 
+                [title]="loanType.isActive ? 'Deactivate' : 'Activate'"
+              >
+                {{ loanType.isActive ? '🔒' : '🔓' }}
+              </button>
+              <button class="btn-icon danger" (click)="deleteLoanType(loanType)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-data" *ngIf="filteredLoanTypes.length === 0">
+      <p>No loan types found</p>
+      <button class="btn btn-primary" (click)="createLoanType()">
+        Create First Loan Type
+      </button>
+    </div>
+  </div>
+</div>

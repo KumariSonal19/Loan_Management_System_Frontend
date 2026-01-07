@@ -1,0 +1,31 @@
+<header class="app-header">
+  <div class="header-content">
+    <div class="header-left">
+      <h1 class="app-logo" (click)="navigateToDashboard()">
+        Loan Management System
+      </h1>
+    </div>
+
+    <div class="header-right" *ngIf="currentUser">
+      <div class="user-info" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          {{ currentUser.fullName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser.fullName }}</span>
+          <span class="user-role">{{ currentUser.role }}</span>
+        </div>
+        <span class="dropdown-icon">▼</span>
+      </div>
+
+      <div class="user-menu" *ngIf="showUserMenu">
+        <div class="menu-item" (click)="navigateToDashboard(); showUserMenu = false">
+          Dashboard
+        </div>
+        <div class="menu-item" (click)="logout()">
+          Logout
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

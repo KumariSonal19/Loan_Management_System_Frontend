@@ -1,0 +1,107 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>User Management</h1>
+    <p>Manage system users and their roles</p>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by name, email or username..."
+        class="form-control"
+      />
+    </div>
+
+    <div class="filter-select">
+      <select
+        [(ngModel)]="filterRole"
+        (ngModelChange)="onRoleChange()"
+        class="form-control"
+      >
+        <option value="ALL">All Roles</option>
+        <option value="ADMIN">Admin</option>
+        <option value="LOAN_OFFICER">Loan Officer</option>
+        <option value="CUSTOMER">Customer</option>
+      </select>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <app-loader message="Loading users..."></app-loader>
+  } @else {
+
+    @if (filteredUsers.length > 0) {
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Username</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (user of filteredUsers; track user.userId) {
+              <tr>
+                <td><strong>#{{ user.userId }}</strong></td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.email }}</td>
+
+                <td>
+                  <span
+                    class="role-badge"
+                    [ngClass]="'role-' + user.role.toLowerCase()"
+                  >
+                    {{ user.role }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    [class.active]="user.active"
+                    [class.inactive]="!user.active"
+                  >
+                    {{ user.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-icon" title="Toggle Status"  (click)="toggleUserStatus(user)">
+                      @if (user.active) {
+                        <i class="fa-solid fa-lock"></i>
+                      } @else {
+                        <i class="fa-solid fa-lock-open"></i>
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="no-data">
+        <p>No users found matching your criteria</p>
+      </div>
+    }
+  }
+
+  <div class="info-message">
+    <p>
+      <strong>Note:</strong> Full user management functionality will be available
+      when the backend user management endpoints are implemented.
+    </p>
+  </div>
+</div>

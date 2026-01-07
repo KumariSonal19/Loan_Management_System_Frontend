@@ -1,0 +1,71 @@
+<div class="page-container">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back to Loan Types
+    </button>
+    <div class="header-actions">
+      <h1>Loan Type Details</h1>
+      <button class="btn btn-primary" (click)="editLoanType()">
+        Edit
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <app-loader message="Loading details..."></app-loader>
+  } @else {
+    @if (loanType) {
+      <div class="details-container">
+        <div class="details-card">
+          <div class="card-header">
+            <h2>{{ loanType.typeName }}</h2>
+            <span class="badge" [class.active]="loanType.isActive" [class.inactive]="!loanType.isActive">
+              {{ loanType.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-section">
+              <h3>Amount Range</h3>
+              <div class="detail-item">
+                <span class="label">Minimum Amount</span>
+                <span class="value">{{ loanType.minAmount | currencyFormat }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Maximum Amount</span>
+                <span class="value">{{ loanType.maxAmount | currencyFormat }}</span>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <h3>Tenure Range</h3>
+              <div class="detail-item">
+                <span class="label">Minimum Tenure</span>
+                <span class="value">{{ loanType.minTenure }} months</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Maximum Tenure</span>
+                <span class="value">{{ loanType.maxTenure }} months ({{ loanType.maxTenure / 12 | number:'1.0-1' }} years)</span>
+              </div>
+            </div>
+
+            <div class="detail-section full-width">
+              <h3>Interest Rate</h3>
+              <div class="detail-item">
+                <span class="label">Base Interest Rate</span>
+                <span class="value highlight">{{ loanType.baseInterestRate }}% per annum</span>
+              </div>
+            </div>
+
+            @if (loanType.description) {
+              <div class="detail-section full-width">
+                <h3>Description</h3>
+                <p class="description">{{ loanType.description }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

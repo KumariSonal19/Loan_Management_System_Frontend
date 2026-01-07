@@ -1,0 +1,161 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Loan Officer Dashboard</h1>
+    <p>Review and manage loan applications</p>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="stats-grid" *ngIf="!isLoading">
+    <div class="stat-card info">
+      <div class="stat-icon">
+        <i class="fa-solid fa-file-lines"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.applied }}</h3>
+        <p>New Applications</p>
+      </div>
+    </div>
+
+    <div class="stat-card warning">
+      <div class="stat-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.underReview }}</h3>
+        <p>Under Review</p>
+      </div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.approved }}</h3>
+        <p>Approved</p>
+      </div>
+    </div>
+
+    <div class="stat-card danger">
+      <div class="stat-icon">
+        <i class="fa-solid fa-circle-xmark"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.rejected }}</h3>
+        <p>Rejected</p>
+      </div>
+    </div>
+  </div>
+
+<div class="quick-actions">
+  <button
+    class="btn btn-outline-primary"
+    (click)="goToLoanHistory()"
+  >
+    <i class="fa-solid fa-clock-rotate-left"></i>
+    Loan Review History
+  </button>
+</div>
+
+  <div class="loans-section">
+    <h2>Pending Loan Applications</h2>
+    
+    <div class="table-container" *ngIf="pendingLoans.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Loan ID</th>
+            <th>Amount</th>
+            <th>Tenure</th>
+            <th>Income</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let loan of pendingLoans">
+            <td><strong>#{{ loan.id }}</strong></td>
+            <td>{{ loan.loanAmount | currencyFormat }}</td>
+            <td>{{ loan.tenure }} months</td>
+            <td>{{ loan.annualIncome | currencyFormat }}</td>
+            <td>{{ loan.appliedDate! | dateFormat }}</td>
+            <td>
+              <span class="badge" 
+                    [class.status-applied]="loan.status === 'APPLIED'"
+                    [class.status-review]="loan.status === 'UNDER_REVIEW'">
+                {{ loan.status === 'APPLIED' ? 'New' : 'Under Review' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary" (click)="openReviewModal(loan)">
+                <i class="fa-solid fa-eye"></i>
+                Review
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-data" *ngIf="pendingLoans.length === 0 && !isLoading">
+      <p>No pending loan applications</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showReviewModal" (click)="closeReviewModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>
+          <i class="fa-solid fa-file-invoice"></i>
+          Review Loan Application #{{ selectedLoan?.id }}
+        </h2>
+        <button class="close-btn" (click)="closeReviewModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+        <div class="form-group">
+          <label>Decision *</label>
+          <select formControlName="status" class="form-control">
+            <option value="">Select Decision</option>
+            <option value="UNDER_REVIEW">Move to Under Review</option>
+            <option value="APPROVED">Approve</option>
+            <option value="REJECTED">Reject</option>
+          </select>
+        </div>
+
+        <div *ngIf="reviewForm.get('status')?.value === 'APPROVED'">
+          <div class="form-group">
+            <label>Approved Amount (₹) *</label>
+            <input type="number" formControlName="approvedAmount" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>Interest Rate (%) *</label>
+            <input type="number" step="0.01" formControlName="interestRate" class="form-control" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Remarks *</label>
+          <textarea formControlName="remarks" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeReviewModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i>
+            Submit Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

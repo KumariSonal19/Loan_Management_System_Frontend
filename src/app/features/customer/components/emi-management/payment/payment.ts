@@ -10,12 +10,13 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './payment.html',
-  styleUrls: ['./payment.scss']
+  styleUrls: ['./payment.css']
 })
 export class PaymentComponent implements OnInit {
   form!: FormGroup;
   emiId!: number;
   loading = false;
+  amountToPay = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -28,8 +29,14 @@ export class PaymentComponent implements OnInit {
   ngOnInit(): void {
     this.emiId = Number(this.route.snapshot.paramMap.get('id'));
 
+    const queryAmount = this.route.snapshot.queryParamMap.get('amount');
+    this.amountToPay = queryAmount ? Number(queryAmount) : 0;
+
     this.form = this.fb.group({
-      amountPaid: ['', [Validators.required, Validators.min(1)]],
+      amountPaid: [
+        { value: this.amountToPay, disabled: true },
+        [Validators.required, Validators.min(1)]
+      ],
       paymentMode: ['', Validators.required]
     });
   }
@@ -39,15 +46,21 @@ export class PaymentComponent implements OnInit {
 
     this.loading = true;
 
+    const formData = this.form.getRawValue();
+
     this.emiService.makePayment({
       emiScheduleId: this.emiId,
-      ...this.form.value
+      amountPaid: formData.amountPaid,
+      paymentMode: formData.paymentMode
     }).subscribe({
       next: () => {
         this.toastr.success('Payment successful');
         this.router.navigate(['/customer/dashboard']);
       },
-      error: () => this.loading = false
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Payment failed. Please try again.');
+      }
     });
   }
 }

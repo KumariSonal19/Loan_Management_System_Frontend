@@ -1,0 +1,16 @@
+<div class="page-container">
+  <h1>Make EMI Payment</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <input type="number" formControlName="amountPaid" placeholder="Amount" />
+    <select formControlName="paymentMode">
+      <option value="">Select Mode</option>
+      <option value="UPI">UPI</option>
+      <option value="NET_BANKING">Net Banking</option>
+    </select>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Processing...' : 'Pay Now' }}
+    </button>
+  </form>
+</div>

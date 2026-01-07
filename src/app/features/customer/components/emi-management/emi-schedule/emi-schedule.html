@@ -1,0 +1,30 @@
+<div class="page-container">
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <h1>EMI Schedule (Loan #{{ loanId }})</h1>
+
+  <p>Paid: {{ paidCount }} | Pending: {{ pendingCount }}</p>
+
+  <table *ngIf="!isLoading">
+    <tr>
+      <th>#</th>
+      <th>Due Date</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+
+    <tr *ngFor="let emi of emiSchedule">
+      <td>{{ emi.emiNumber }}</td>
+      <td>{{ emi.dueDate | date }}</td>
+      <td>{{ emi.emiAmount }}</td>
+      <td>{{ emi.status }}</td>
+      <td>
+        <button
+          *ngIf="emi.status !== 'PAID'"
+          (click)="makePayment(emi.id!, emi.emiAmount)"> Pay Now
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

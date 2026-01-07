@@ -1,0 +1,101 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Loan Review History</h1>
+    <p>View all reviewed loan applications</p>
+  </div>
+
+  <div class="filters-section">
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === 'ALL'"
+      (click)="onFilterChange('ALL')"
+    >
+      All ({{ reviewedLoans.length }})
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === LoanStatus.APPROVED"
+      (click)="onFilterChange(LoanStatus.APPROVED)"
+    >
+      Approved
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="filterStatus === LoanStatus.REJECTED"
+      (click)="onFilterChange(LoanStatus.REJECTED)"
+    >
+      Rejected
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <app-loader message="Loading loan history..."></app-loader>
+  } @else {
+    @if (filteredLoans.length > 0) {
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loan ID</th>
+              <th>Requested Amount</th>
+              <th>Approved Amount</th>
+              <th>Interest Rate</th>
+              <th>Tenure</th>
+              <th>Applied Date</th>
+              <th>Reviewed Date</th>
+              <th>Status</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (loan of filteredLoans; track loan.id!) {
+              <tr>
+                <td><strong>#{{ loan.id }}</strong></td>
+                <td>{{ loan.loanAmount | currencyFormat }}</td>
+                <td>
+                  @if (loan.approvedAmount) {
+                    <span class="approved-amount">
+                      {{ loan.approvedAmount | currencyFormat }}
+                    </span>
+                  } @else {
+                    <span class="na-text">-</span>
+                  }
+                </td>
+                <td>
+                  @if (loan.approvedInterestRate) {
+                    <span>{{ loan.approvedInterestRate }}%</span>
+                  } @else {
+                    <span class="na-text">-</span>
+                  }
+                </td>
+                <td>{{ loan.tenure }} months</td>
+                <td>{{ loan.appliedDate! | dateFormat }}</td>
+                <td>
+                  @if (loan.approvalDate) {
+                    <span>{{ loan.approvalDate | dateFormat }}</span>
+                  } @else {
+                    <span class="na-text">-</span>
+                  }
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusClass(loan.status!)">
+                    {{ loan.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="remarks-cell">
+                    <small>{{ loan.approvalRemarks }}</small>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="no-data">
+        <p>No reviewed loans found for the selected filter</p>
+      </div>
+    }
+  }
+</div>

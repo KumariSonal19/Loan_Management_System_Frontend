@@ -1,0 +1,74 @@
+<div class="page-container">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back to Loans
+    </button>
+    <h1>Loan Application Details</h1>
+  </div>
+
+  <app-loader *ngIf="isLoading" message="Loading loan details..."></app-loader>
+
+  <div class="details-container" *ngIf="!isLoading && loan">
+    <div class="details-card">
+      <div class="card-header">
+        <h2>Loan #{{ loan.id }}</h2>
+        <span class="badge" [ngClass]="getStatusClass(loan.status!)">
+          {{ loan.status }}
+        </span>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="label">Requested Amount</span>
+          <span class="value">{{ loan.loanAmount | currencyFormat }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Tenure</span>
+          <span class="value">{{ loan.tenure }} months</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Annual Income</span>
+          <span class="value">{{ loan.annualIncome | currencyFormat }}</span>
+        </div>
+
+        <div class="detail-item" *ngIf="loan.employmentScore">
+          <span class="label">Employment Score</span>
+          <span class="value">{{ loan.employmentScore }}/100</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Applied Date</span>
+          <span class="value">{{ loan.appliedDate || '' | dateFormat }}</span>
+        </div>
+
+        <div class="detail-item" *ngIf="loan.approvalDate">
+          <span class="label">Approval Date</span>
+          <span class="value">{{ loan.approvalDate | dateFormat:'long' }}</span>
+        </div>
+
+        <div class="detail-item full-width" *ngIf="loan.approvedAmount">
+          <span class="label">Approved Amount</span>
+          <span class="value success">{{ loan.approvedAmount | currencyFormat }}</span>
+        </div>
+
+        <div class="detail-item full-width" *ngIf="loan.approvedInterestRate">
+          <span class="label">Interest Rate</span>
+          <span class="value">{{ loan.approvedInterestRate }}% per annum</span>
+        </div>
+
+        <div class="detail-item full-width" *ngIf="loan.approvalRemarks">
+          <span class="label">Remarks</span>
+          <span class="value remarks">{{ loan.approvalRemarks }}</span>
+        </div>
+      </div>
+
+      <div class="card-actions" *ngIf="loan.status === 'APPROVED'">
+        <button class="btn btn-primary" (click)="viewEMISchedule()">
+          View EMI Schedule
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

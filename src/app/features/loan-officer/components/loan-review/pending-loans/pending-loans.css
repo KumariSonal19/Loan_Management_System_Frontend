@@ -1,0 +1,55 @@
+.loan-summary {
+  background: #f7fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .label {
+      font-size: 13px;
+      color: #718096;
+      font-weight: 500;
+    }
+
+    .value {
+      font-size: 16px;
+      color: #1a202c;
+      font-weight: 600;
+    }
+  }
+}
+
+.approval-fields {
+  background: #ebf8ff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid #4299e1;
+
+  .form-group {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.modal-dialog {
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .loan-summary {
+    grid-template-columns: 1fr;
+  }
+}

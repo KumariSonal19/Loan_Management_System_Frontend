@@ -1,0 +1,103 @@
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.detail-section {
+  background: #f7fafc;
+  padding: 20px;
+  border-radius: 8px;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: #2d3748;
+    font-weight: 600;
+  }
+
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .value {
+      font-weight: 600;
+      color: #1a202c;
+      font-size: 16px;
+
+      &.highlight {
+        color: #667eea;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .description {
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.role-admin {
+    background: #fed7e2;
+    color: #97266d;
+  }
+
+  &.role-loan_officer {
+    background: #c6f6d5;
+    color: #22543d;
+  }
+
+  &.role-customer {
+    background: #bee3f8;
+    color: #2c5282;
+  }
+}
+
+.filter-select {
+  min-width: 200px;
+}
+
+.info-message {
+  margin-top: 24px;
+  padding: 16px;
+  background: #ebf8ff;
+  border-left: 4px solid #4299e1;
+  border-radius: 8px;
+
+  p {
+    margin: 0;
+    color: #2c5282;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}

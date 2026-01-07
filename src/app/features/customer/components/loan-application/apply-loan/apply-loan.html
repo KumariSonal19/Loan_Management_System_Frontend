@@ -1,0 +1,138 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Apply for Loan</h1>
+    <p>Fill in your details to apply for a loan</p>
+  </div>
+
+  <div class="form-container">
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="loanTypeId">Select Loan Type *</label>
+          <select
+            id="loanTypeId"
+            formControlName="loanTypeId"
+            class="form-control"
+            [class.error]="hasError('loanTypeId', 'required')">
+            <option value="">-- Choose Loan Type --</option>
+            <option *ngFor="let type of loanTypes" [value]="type.id">
+              {{ type.typeName }} ({{ type.baseInterestRate }}% interest)
+            </option>
+          </select>
+          <span class="error-message" *ngIf="hasError('loanTypeId', 'required')">
+            Please select a loan type
+          </span>
+        </div>
+
+        <div class="loan-type-info" *ngIf="selectedLoanType">
+          <h3>Loan Type Details</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Amount Range:</span>
+              <span class="value">
+                ₹{{ selectedLoanType.minAmount | number }} - 
+                ₹{{ selectedLoanType.maxAmount | number }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">Interest Rate:</span>
+              <span class="value">{{ selectedLoanType.baseInterestRate }}%</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Tenure Range:</span>
+              <span class="value">
+                {{ selectedLoanType.minTenure }} - {{ selectedLoanType.maxTenure }} months
+              </span>
+            </div>
+            <div class="info-item full-width" *ngIf="selectedLoanType.description">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedLoanType.description }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="loanAmount">Loan Amount (₹) *</label>
+          <input
+            type="number"
+            id="loanAmount"
+            formControlName="loanAmount"
+            class="form-control"
+            [class.error]="hasError('loanAmount', 'required') || hasError('loanAmount', 'min')"
+            placeholder="Enter amount"
+          />
+          <span class="error-message" *ngIf="hasError('loanAmount', 'required')">
+            Loan amount is required
+          </span>
+          <span class="error-message" *ngIf="hasError('loanAmount', 'min')">
+            Minimum amount is ₹10,000
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="tenure">Loan Tenure (months) *</label>
+          <input
+            type="number"
+            id="tenure"
+            formControlName="tenure"
+            class="form-control"
+            [class.error]="hasError('tenure', 'required') || hasError('tenure', 'min')"
+            placeholder="Enter tenure"
+          />
+          <span class="error-message" *ngIf="hasError('tenure', 'required')">
+            Tenure is required
+          </span>
+          <span class="error-message" *ngIf="hasError('tenure', 'min')">
+            Minimum tenure is 6 months
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="annualIncome">Annual Income (₹) *</label>
+          <input
+            type="number"
+            id="annualIncome"
+            formControlName="annualIncome"
+            class="form-control"
+            [class.error]="hasError('annualIncome', 'required')"
+            placeholder="Enter annual income"
+          />
+          <span class="error-message" *ngIf="hasError('annualIncome', 'required')">
+            Annual income is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="employmentScore">
+            Employment Score (0-100)
+            <small>Optional - Higher score improves approval chances</small>
+          </label>
+          <input
+            type="number"
+            id="employmentScore"
+            formControlName="employmentScore"
+            class="form-control"
+            placeholder="50"
+          />
+        </div>
+
+        <div class="emi-calculator" *ngIf="calculatedEMI > 0">
+          <h3>Estimated Monthly EMI</h3>
+          <div class="emi-amount">₹{{ calculatedEMI | number:'1.0-0' }}</div>
+          <p class="emi-note">
+            *This is an approximate EMI. Actual EMI will be calculated after loan approval.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isLoading">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || !selectedLoanType">
+          {{ isLoading ? 'Submitting...' : 'Submit Application' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

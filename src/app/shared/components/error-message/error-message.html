@@ -1,0 +1,16 @@
+@if (message) {
+  <div
+    class="error-container"
+    [ngClass]="'error-' + type"
+  >
+    <span class="error-icon">
+      <ng-container [ngSwitch]="type">
+        <i *ngSwitchCase="'error'" class="fa-solid fa-circle-xmark"></i>
+        <i *ngSwitchCase="'warning'" class="fa-solid fa-triangle-exclamation"></i>
+        <i *ngSwitchCase="'info'" class="fa-solid fa-circle-info"></i>
+      </ng-container>
+    </span>
+
+    <span class="error-text">{{ message }}</span>
+  </div>
+}
